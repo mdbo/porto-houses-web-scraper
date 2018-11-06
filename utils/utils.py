@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from typing import List
 
 import pandas as pd
 
@@ -12,24 +13,26 @@ def config_logging():
 def create_dir(dir: Path):
     """Check if a directory already exists. Otherwise, create it."""
     logging.info(f'Creating directory {dir}')
-    if not dir.exists():
-        dir.mkdir(parents=True, exist_ok=True)
-    else:
+    if dir.exists():
         logging.info(f'Directory {dir} already exists.')
+    else:
+        dir.mkdir(parents=True, exist_ok=True)
 
 
-def create_dataframe(titles, zone, prices, areas, condition, created, descriptions,
-                     uris) -> pd.DataFrame:
-    """Create a Pandas DataFrame containing the properties extracted data."""
-    col_names = ['Title', 'Zone', 'Price (€)', 'Size (m²)', 'Status', 'Description', 'Date', 'URI']
-    df = pd.DataFrame({'Title': titles,
-                       'Price': prices,
-                       'Size (m²)': areas,
-                       'Zone': zone,
-                       'Status': condition,
-                       'Date': created,
-                       'Description': descriptions,
-                       'URI': uris})[col_names]
+def create_dataframe(titles: List[str], prices: List[int], sizes: List[str], zones: List[str],
+                     conditions: List[str], dates: List[str], descriptions: List[str],
+                     links: List[str]) -> pd.DataFrame:
+    """Create a Pandas DataFrame containing the properties extracted data.
+    NB: Price is in euros (€); Size is in square metre (m2)"""
+    col_names = ['title', 'price', 'size', 'zone', 'status', 'date', 'description', 'uri']
+    df = pd.DataFrame({'title': titles,
+                       'price': prices,
+                       'size': sizes,
+                       'zone': zones,
+                       'status': conditions,
+                       'date': dates,
+                       'description': descriptions,
+                       'uri': links})[col_names]
     return df
 
 
